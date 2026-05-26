@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# TypeScript build output
+dist/
+
+# Environment / secrets
+.env
+.env.*
+
+# OS / editor (optional but common)
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/launch.json
