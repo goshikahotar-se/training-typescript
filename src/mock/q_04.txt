@@ -1,0 +1,46 @@
+1. List 6 test cases you would automate (name each briefly). For each, say UI (E2E) or API and why.
+ i) A registered user should be able to see the option "Transfer" when logging in the app.
+    -> API: simply logging in the app with a registered user is api level check - do-able and simple check of having access to 'Transfer'.
+    // API: GET /me shows canTransfer: true
+ ii) A registered user should be able to enter account number and amount when accessing the Transfer page.
+     -> API: This deals with only one page, one service, where we are only checking the exact elements are provided to the registered user when accessing the Transfer page.
+     // Wrong: You’re checking fields on a page — that’s UI
+ iii) A registered user should see a deduction of $5 when transferring $5 from his account and the recipient should see an increase of $5 in his account.
+     ->  UI (E2E): This test covers the funds movement from the sender to the receiver which requires checks on several parts of the whole solution - balance api, sender balance vs receiver balance (before and after)
+ iv) A non-registered should not have access to 'Transfer' button
+      -> API: Service level coverage, simple user that accesses the application and should not have access to 'Transfer' button. 
+      // 403 NOT Found
+ v) The registered user should successfully see success message after clicking the 'confirm' button.
+      -> API: This is service level coverage where only at the api level test can be easily written to test the success message after clicking the confirm button.
+      // Message is UI. API: POST /transfers → 201 + transaction id
+ vi) A registered user should not be able to click the confirm button if account number or amount value is not entered .
+      -> API: This is only on one screen, check is constricted to only one page, one service.
+      //  400 on bad payload
+
+      NOTE:
+      API: status codes, JSON body, balances via endpoints, fast and stable
+      E2E: buttons, messages, multi-screen journey, what the user sees
+
+
+2. List 2 test cases you would keep manual (or not automate in E2E) and why.
+Basically we keep those tests manual - where the test are one-off (would not required to be test after doing once), OR tests where there is too much unstability - for e.g. in this feature I can see:
+ i) the the registered users, we do not need to create one from scratch for this feature. We can use existing registered user and do the transfer.
+ ii) we also do need need to create new accounts for the registered user each time; we can use existing ones to complete the feature coverage of the transfer.
+
+ //Exploratory — odd inputs, copy/paste account numbers, keyboard/mobile layout
+ //MFA / 3-D Secure / CAPTCHA — often not stable in automation without test hooks
+
+3. Name 3 risks if you only run happy-path E2E in Chromium and skip everything else.
+    i) Different user-experience across the different browsers (layout inconsistencies, broken UI)
+    ii) Compatibility issues - certain feature might now work
+    iii) Performance difference across different browsers.
+
+4. What do you need from BA, developers, and DevOps before you start writing automation?
+From BA, we need the actual feature requirements, Acceptance Criteria, edge cases - this will permit us to create our test data accordingly to perform our feature tests.
+From developers, we need the technical documentation, API Spec(Swagger) - how the system has been designed.
+From Devops, we need our test suites to run on CI - so intergrating the workflow of our E2E our Acceptance suites in the CI is important. Storing our secrets and access keys securely on Github secrets - these help are needed.
+
+
+“I’d automate transfers mainly at API level for amounts, errors, and balances, plus a thin E2E smoke on Chromium and expand browsers in CI. 
+Manual stays for exploratory and MFA-like flows. 
+I need clear acceptance criteria, test accounts with known balances, selectors, and a stable QA pipeline with secrets and reports.”
